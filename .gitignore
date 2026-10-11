@@ -1,0 +1,7 @@
+# A library gem: the resolution belongs to the consuming app. A committed lock
+# would also fail CI, because setup-ruby installs in frozen mode whenever one
+# exists and the FEATUREFLIP_SDK_PATH override changes the resolution.
+Gemfile.lock
+*.gem
+.bundle/
+coverage/
