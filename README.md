@@ -59,6 +59,12 @@ fork leaves each worker with dead polling and streaming threads, so it serves
 the boot snapshot and never emits `PROVIDER_CONFIGURATION_CHANGED`. If you pass
 your own `client:`, call `client.restart` in that hook instead.
 
+The SDK keeps one client core per SDK key in each process. So if your app also
+builds a client for the same key before the fork, say with
+`Featureflip.configure` in a Rails initializer, the provider registered after
+the fork picks up that inherited core, dead threads and all. Call
+`Featureflip.restart` in the same hook to bring it back to life.
+
 Full documentation: https://featureflip.io/docs/integrations/openfeature/#ruby
 
 ## License

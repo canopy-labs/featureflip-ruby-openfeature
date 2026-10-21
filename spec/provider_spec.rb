@@ -74,7 +74,9 @@ RSpec.describe Featureflip::OpenFeature::Provider do
 
     it "builds and owns a client from sdk_key in init, and closes it in shutdown" do
       config = Featureflip::Config.new(streaming: false, send_events: false)
-      allow(Featureflip::Client).to receive(:get).with("sdk-key", config: config).and_return(fake_client)
+      allow(Featureflip::Client).to receive(:get)
+        .with("sdk-key", config: having_attributes(streaming: false, send_events: false))
+        .and_return(fake_client)
       provider = described_class.new(sdk_key: "sdk-key", config: config)
       expect(Featureflip::Client).not_to have_received(:get)
 

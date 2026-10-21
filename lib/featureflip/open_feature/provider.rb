@@ -60,7 +60,7 @@ module Featureflip
           generation = @state_mutex.synchronize { @shut_down ? nil : @generation }
           return nil if generation.nil?
 
-          @client ||= Featureflip::Client.get(@sdk_key, config: @config)
+          @client ||= Featureflip::Client.get(@sdk_key, config: identified_config)
           # Subscribed after the client is ready, so the initial load is never a
           # "change" (OpenFeature signals it with PROVIDER_READY). Guarded because
           # OpenFeature may initialize a provider more than once. The listener can
@@ -118,7 +118,8 @@ module Featureflip
         resolve(:object, flag_key, default_value, evaluation_context)
       end
 
-      # Called by openfeature-sdk 0.6.1+; 0.5 has no tracking API and never calls it.
+      # Called by openfeature-sdk 0.6.1+, the release that added the tracking API.
+      # Earlier versions never call it.
       def track(tracking_event_name, evaluation_context: nil, tracking_event_details: nil)
         client = @client
         return if client.nil?
@@ -132,6 +133,25 @@ module Featureflip
       end
 
       private
+
+      WRAPPER_NAME = "featureflip-openfeature-ruby"
+
+      # The caller's config (or a default one) naming this provider as the SDK's
+      # wrapper, so requests read "featureflip-ruby/<v> featureflip-openfeature-ruby/<v>"
+      # (#4154). A copy, so a config the caller reuses for direct SDK clients is not
+      # relabelled, with the SDK's memoized user agent cleared so the copy does not
+      # inherit the caller's. A wrapper the caller already set is kept: the SDK
+      # carries one, and theirs is the more specific. Only the sdk_key: form gets
+      # here; a borrowed client was built before the provider saw it.
+      def identified_config
+        return @config if @config&.wrapper_name
+
+        copy = @config ? @config.dup : Featureflip::Config.new
+        copy.remove_instance_variable(:@user_agent) if copy.instance_variable_defined?(:@user_agent)
+        copy.wrapper_name = WRAPPER_NAME
+        copy.wrapper_version = VERSION
+        copy
+      end
 
       # Reads UNTYPED via variation_detail and applies the type guard here. The
       # SDK's typed accessors report a wrong-typed value as reason "Error", the

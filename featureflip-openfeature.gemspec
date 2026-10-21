@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
 
   # 2.10 is the release that added Client#on_update, which the provider's
   # PROVIDER_CONFIGURATION_CHANGED is built on.
-  spec.add_dependency "featureflip", "~> 2.10"
+  spec.add_dependency "featureflip", "~> 2.11"
   # 0.5 added provider eventing and still supports Ruby 3.1+; 0.6 needs 3.4+.
   # The range therefore resolves on every Ruby the SDK supports. Upstream is
   # pre-1.0, so a 0.7 is allowed to break the provider interface; widen this
