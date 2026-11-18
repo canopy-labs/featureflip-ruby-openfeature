@@ -22,12 +22,14 @@ module Featureflip
 
         targeting_key = fields[TARGETING_KEY]
         blank = targeting_key.nil? || (targeting_key.respond_to?(:empty?) && targeting_key.empty?)
-        # BOTH spellings, because the Ruby SDK's condition evaluator reads
-        # context[attribute] exactly; the userId/user_id alias exists only on
-        # the bucketing path. A rule on either spelling must match. An explicit
-        # attribute of either spelling wins and nothing is overwritten.
+        # Written as user_id, the canonical spelling. A rule on userId still
+        # matches: the SDK resolves either name to the same identity, user_id
+        # first (#4518). That alias reaches the condition path only from
+        # featureflip 2.13.1, the gemspec floor; before it the condition
+        # evaluator read context[attribute] exactly and this wrote both. An
+        # explicit attribute of either spelling wins and nothing is added.
         if !blank && IDENTITY_KEYS.none? { |k| context.key?(k) }
-          IDENTITY_KEYS.each { |k| context[k] = targeting_key }
+          context["user_id"] = targeting_key
         end
         context
       end

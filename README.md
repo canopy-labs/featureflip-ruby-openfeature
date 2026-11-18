@@ -40,8 +40,9 @@ OpenFeature::SDK.set_provider_and_wait(Featureflip::OpenFeature::Provider.new(cl
 
 ## Behavior
 
-- `targeting_key` is written under both `user_id` and `userId`, so a targeting
-  rule on either spelling matches. An explicit attribute of either spelling wins.
+- `targeting_key` becomes `user_id`. A targeting rule on either `user_id` or
+  `userId` matches it, because the SDK resolves both names to the same identity.
+  An explicit attribute of either spelling wins.
 - `Time`, `Date` and `DateTime` attributes become ISO-8601 strings.
 - `fetch_integer_value` accepts whole-number floats (`3.0` returns `3`).
   `fetch_float_value` accepts integers (`5` returns `5.0`).

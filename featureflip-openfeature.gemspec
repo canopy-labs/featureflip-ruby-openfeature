@@ -20,9 +20,11 @@ Gem::Specification.new do |spec|
   spec.files = Dir["lib/**/*.rb"] + %w[README.md CHANGELOG.md LICENSE]
   spec.require_paths = ["lib"]
 
-  # 2.10 is the release that added Client#on_update, which the provider's
-  # PROVIDER_CONFIGURATION_CHANGED is built on.
-  spec.add_dependency "featureflip", "~> 2.13"
+  # 2.13.1 is the release whose condition evaluator resolves userId and
+  # user_id to the same identity, which lets the provider write the targeting
+  # key as user_id alone. (Client#on_update, behind PROVIDER_CONFIGURATION_CHANGED,
+  # arrived in 2.10.)
+  spec.add_dependency "featureflip", "~> 2.13", ">= 2.13.1"
   # 0.5 added provider eventing and still supports Ruby 3.1+; 0.6 needs 3.4+.
   # The range therefore resolves on every Ruby the SDK supports. Upstream is
   # pre-1.0, so a 0.7 is allowed to break the provider interface; widen this

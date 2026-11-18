@@ -7,9 +7,9 @@ RSpec.describe Featureflip::OpenFeature::ContextMapping do
     expect(described_class.to_featureflip(nil)).to eq({})
   end
 
-  it "writes targeting_key under both identity spellings and drops the reserved key" do
+  it "writes targeting_key as the canonical user_id only and drops the reserved key" do
     mapped = described_class.to_featureflip(ctx(targeting_key: "user-42", plan: "pro"))
-    expect(mapped).to eq("user_id" => "user-42", "userId" => "user-42", "plan" => "pro")
+    expect(mapped).to eq("user_id" => "user-42", "plan" => "pro")
   end
 
   it "leaves an explicit identity attribute alone, whichever spelling it uses" do

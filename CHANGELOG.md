@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0 — 2026-11-17
+
+### Changed
+
+- `targeting_key` is written into the Featureflip context as `user_id` only, the canonical spelling, instead of under both `user_id` and `userId`. A targeting rule on either spelling still matches, because the SDK resolves `userId` and `user_id` to the same identity. That alias reached the SDK's condition evaluator in `featureflip` 2.13.1, so the provider now requires 2.13.1 or later. An explicit attribute of either spelling still wins. (#4546)
+
 ## 0.2.1 — 2026-10-26
 
 ### Changed

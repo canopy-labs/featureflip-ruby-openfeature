@@ -304,7 +304,7 @@ RSpec.describe Featureflip::OpenFeature::Provider do
         tracking_event_details: details
       )
       expect(fake).to have_received(:track)
-        .with("purchase", { "user_id" => "u1", "userId" => "u1" }, { "plan" => "pro", "value" => 9.99 })
+        .with("purchase", { "user_id" => "u1" }, { "plan" => "pro", "value" => 9.99 })
     end
   end
 end
